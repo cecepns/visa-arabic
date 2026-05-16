@@ -29,7 +29,10 @@ export default function VisaDetailModal({ isOpen, onClose, visa, onPrint, onDown
           <Detail label="Nationality" value={visa.nationality} />
           <Detail label="Visa Type" value={visa.visa_type} />
           <Detail label="Application No." value={visa.application_number} />
-          <Detail label="Sponsor" value={visa.sponsor_name || '-'} />
+          <Detail label="Place of Issue" value={visa.place_of_issue || '-'} />
+          <Detail label="Service Provider" value={visa.sponsor_name || '-'} />
+          <Detail label="Border No" value={visa.border_no || String(visa.id)} />
+          <Detail label="Local Service" value={visa.local_service || '-'} />
           <Detail label="Issue Date" value={formatDate(visa.issue_date)} />
           <Detail label="Expiry Date" value={formatDate(visa.expiry_date)} />
         </div>

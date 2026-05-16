@@ -130,8 +130,18 @@
   }
 }
 
+.visa-preview-viewport {
+  -webkit-overflow-scrolling: touch;
+  background-color: inherit;
+}
+
 .visa-preview-frame {
-  overflow: visible;
+  overflow: hidden;
+  position: relative;
+}
+
+.visa-preview-scaler {
+  will-change: transform;
 }
 
 #visa-print-area,

@@ -74,9 +74,14 @@ export default function VisaTemplate({ visa }) {
   const photoUrl = getImageUrl(visa.profile_photo);
   const qrUrl = getVisaQrUrl(visa);
   const mrzLines = generateMRZ(visa);
+  const DEFAULT_PLACE_OF_ISSUE = 'Saudi Digital Embassy - السفارة السعودية الرقمية';
+  const placeOfIssue = visa.place_of_issue || DEFAULT_PLACE_OF_ISSUE;
   const serviceProvider = visa.sponsor_name || 'Ministry of Foreign Affairs - وزارة الخارجية';
-  const borderNo = String(visa.id || 0).padStart(1, '0');
-  const localService = digitsOnly(visa.application_number).slice(-12) || digitsOnly(visa.visa_number);
+  const borderNo = visa.border_no || String(visa.id || 0);
+  const localService =
+    visa.local_service ||
+    digitsOnly(visa.application_number).slice(-12) ||
+    digitsOnly(visa.visa_number);
 
   return (
     <div
@@ -153,7 +158,7 @@ export default function VisaTemplate({ visa }) {
             مكان الإصدار
           </span>
           <span className="text-center font-semibold px-4 text-gray-900">
-            Saudi Digital Embassy - السفارة السعودية الرقمية
+            {placeOfIssue}
           </span>
           <span className="text-left text-gray-800">Place of issue</span>
         </div>

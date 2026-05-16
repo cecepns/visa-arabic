@@ -42,23 +42,30 @@ export default function VisaPreview() {
   }
 
   return (
-    <section className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
-      <header className="max-w-4xl mx-auto no-print mb-6 flex flex-wrap gap-3 justify-between items-center">
-        <Link to="/" className="btn-secondary text-sm py-2">
-          <ArrowLeft className="w-4 h-4" /> Back
-        </Link>
-        <nav className="flex gap-2">
-          <button type="button" onClick={printVisa} className="btn-primary text-sm py-2">
-            <Printer className="w-4 h-4" /> Print
-          </button>
-          <button type="button" onClick={handleDownload} className="btn-secondary text-sm py-2">
-            <Download className="w-4 h-4" /> Download PDF
-          </button>
-        </nav>
-      </header>
-      <VisaPreviewFrame>
-        <VisaTemplate visa={visa} />
-      </VisaPreviewFrame>
-    </section>
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <div className="no-print px-4 pt-6 pb-4 max-w-4xl mx-auto w-full">
+        <header className="flex flex-wrap gap-3 justify-between items-center">
+          <Link to="/" className="btn-secondary text-sm py-2 shrink-0">
+            <ArrowLeft className="w-4 h-4" /> Back
+          </Link>
+          <nav className="flex gap-2 flex-wrap justify-end">
+            <button type="button" onClick={printVisa} className="btn-primary text-sm py-2">
+              <Printer className="w-4 h-4" /> Print
+            </button>
+            <button type="button" onClick={handleDownload} className="btn-secondary text-sm py-2">
+              <Download className="w-4 h-4" /> Download PDF
+            </button>
+          </nav>
+        </header>
+      </div>
+
+      <div className="visa-preview-viewport w-full overflow-x-auto overflow-y-visible pb-10">
+        <div className="flex justify-center min-w-full px-4 py-2">
+          <VisaPreviewFrame>
+            <VisaTemplate visa={visa} />
+          </VisaPreviewFrame>
+        </div>
+      </div>
+    </div>
   );
 }

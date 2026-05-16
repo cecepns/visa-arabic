@@ -37,7 +37,7 @@ export default function VisaPreviewFrame({ children }) {
   const frameHeight = contentHeight * scale;
 
   return (
-    <div className="visa-preview-frame mx-auto" style={{ width: frameWidth, height: frameHeight }}>
+    <div className="visa-preview-frame shrink-0" style={{ width: frameWidth, height: frameHeight }}>
       <div
         ref={innerRef}
         className="visa-preview-scaler"

@@ -80,9 +80,13 @@ export default function InquiryModal({ isOpen, onClose, initialVisa = null }) {
               {t('modal.newSearch')}
             </button>
           </span>
-          <VisaPreviewFrame>
-            <VisaTemplate visa={visa} />
-          </VisaPreviewFrame>
+          <div className="visa-preview-viewport w-full overflow-x-auto -mx-2 px-2">
+            <div className="flex justify-center min-w-full py-2">
+              <VisaPreviewFrame>
+                <VisaTemplate visa={visa} />
+              </VisaPreviewFrame>
+            </div>
+          </div>
         </section>
       )}
     </Modal>

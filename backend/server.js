@@ -92,6 +92,8 @@ const generateApplicationNumber = () => {
   return `APP-${new Date().getFullYear()}-${num}`;
 };
 
+const DEFAULT_PLACE_OF_ISSUE = 'Saudi Digital Embassy - السفارة السعودية الرقمية';
+
 const logAction = async (visaId, adminId, action, description) => {
   try {
     await pool.execute(
@@ -288,20 +290,25 @@ app.post('/api/visas', authenticateToken, upload.single('profile_photo'), async 
       nationality,
       visa_type,
       sponsor_name,
+      place_of_issue,
+      border_no,
+      local_service,
       issue_date,
       expiry_date,
       status,
+      visa_number: bodyVisaNumber,
+      application_number: bodyApplicationNumber,
     } = req.body;
 
-    const visa_number = generateVisaNumber();
-    const application_number = generateApplicationNumber();
+    const visa_number = bodyVisaNumber?.trim() || generateVisaNumber();
+    const application_number = bodyApplicationNumber?.trim() || generateApplicationNumber();
     const profile_photo = req.file ? `/uploads/${req.file.filename}` : null;
 
     const [result] = await pool.execute(
       `INSERT INTO visa_applicants
         (full_name, passport_number, nationality, visa_number, visa_type, sponsor_name,
-         issue_date, expiry_date, status, profile_photo, application_number)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         place_of_issue, border_no, local_service, issue_date, expiry_date, status, profile_photo, application_number)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         full_name,
         passport_number,
@@ -309,6 +316,9 @@ app.post('/api/visas', authenticateToken, upload.single('profile_photo'), async 
         visa_number,
         visa_type || 'Tourist',
         sponsor_name || null,
+        place_of_issue?.trim() || DEFAULT_PLACE_OF_ISSUE,
+        border_no?.trim() || null,
+        local_service?.trim() || null,
         issue_date,
         expiry_date,
         status || 'pending',
@@ -351,9 +361,14 @@ app.put('/api/visas/:id', authenticateToken, upload.single('profile_photo'), asy
       nationality,
       visa_type,
       sponsor_name,
+      place_of_issue,
+      border_no,
+      local_service,
       issue_date,
       expiry_date,
       status,
+      visa_number,
+      application_number,
     } = req.body;
 
     let profile_photo = existing[0].profile_photo;
@@ -362,18 +377,25 @@ app.put('/api/visas/:id', authenticateToken, upload.single('profile_photo'), asy
     await pool.execute(
       `UPDATE visa_applicants SET
         full_name=?, passport_number=?, nationality=?, visa_type=?,
-        sponsor_name=?, issue_date=?, expiry_date=?, status=?, profile_photo=?
+        sponsor_name=?, place_of_issue=?, border_no=?, local_service=?,
+        issue_date=?, expiry_date=?, status=?, profile_photo=?,
+        visa_number=?, application_number=?
        WHERE id=?`,
       [
         full_name,
         passport_number,
         nationality,
         visa_type,
-        sponsor_name,
+        sponsor_name || null,
+        place_of_issue?.trim() || DEFAULT_PLACE_OF_ISSUE,
+        border_no?.trim() || null,
+        local_service?.trim() || null,
         issue_date,
         expiry_date,
         status,
         profile_photo,
+        visa_number?.trim() || existing[0].visa_number,
+        application_number?.trim() || existing[0].application_number,
         id,
       ]
     );
