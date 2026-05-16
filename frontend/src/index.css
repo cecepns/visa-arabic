@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold
+      bg-gradient-to-r from-ksa-purple to-ksa-navy text-white
+      hover:opacity-90 transition-all shadow-lg hover:shadow-xl;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold
+      border-2 border-ksa-purple text-ksa-purple dark:text-purple-300
+      hover:bg-ksa-purple hover:text-white transition-all;
+  }
+  .btn-hero-light {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold
+      bg-white text-ksa-navy shadow-lg
+      hover:bg-gray-100 hover:shadow-xl transition-all;
+  }
+  .btn-hero-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold
+      border-2 border-white text-white
+      hover:bg-white hover:text-ksa-navy transition-all;
+  }
+  .card {
+    @apply bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-100 dark:border-gray-800 p-6;
+  }
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600
+      bg-white dark:bg-gray-800 focus:ring-2 focus:ring-ksa-purple focus:border-transparent outline-none transition;
+  }
+  .icon-btn {
+    @apply p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-ksa-dark-blue dark:text-white font-arabic;
+  }
+  .service-card {
+    @apply bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center
+      hover:shadow-xl hover:border-ksa-purple/40 hover:-translate-y-1 transition-all duration-300;
+  }
+  .faq-card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden
+      transition-all duration-300 cursor-pointer;
+  }
+  .faq-card:hover {
+    @apply border-ksa-purple/40 shadow-md;
+  }
+  .faq-card-open {
+    @apply border-ksa-purple shadow-md ring-1 ring-ksa-purple/20;
+  }
+  .hero-inquiry-card {
+    @apply bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-white/80;
+  }
+  .hero-input {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-300
+      bg-white text-gray-900 placeholder:text-gray-400
+      focus:ring-2 focus:ring-ksa-purple/30 focus:border-ksa-purple outline-none transition
+      appearance-none;
+  }
+  .hero-inquiry-card select.hero-input {
+    @apply cursor-pointer;
+  }
+  .hero-inquiry-card option {
+    @apply bg-white text-gray-900;
+  }
+  .hero-category-card {
+    @apply flex flex-col bg-white rounded-2xl overflow-hidden shadow-lg border border-white/90
+      hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full;
+  }
+  .hero-category-icon {
+    @apply flex items-center justify-center py-8 bg-gray-50/80;
+  }
+  .hero-category-body {
+    @apply block text-center py-4 px-3 bg-purple-50/60 border-t border-purple-100/80;
+  }
+  .btn-mofa {
+    @apply inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-bold
+      bg-[#2D2E5F] text-white hover:bg-ksa-navy transition-all shadow-md hover:shadow-lg font-arabic;
+  }
+  .hero-pattern-border {
+    background-image: repeating-linear-gradient(
+      90deg,
+      #c9a227 0,
+      #c9a227 8px,
+      #1a237e 8px,
+      #1a237e 16px,
+      #4a148c 16px,
+      #4a148c 24px
+    );
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #visa-print-area,
+  #visa-print-area * {
+    visibility: visible;
+  }
+  #visa-print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  .no-print {
+    display: none !important;
+  }
+  #visa-print-area {
+    box-shadow: none !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+#visa-print-area {
+  color: #111;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
