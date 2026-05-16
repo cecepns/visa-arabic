@@ -1,37 +1,52 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import {
+  prepareVisaElementForCapture,
+  restoreVisaElementAfterCapture,
+} from './visaLayout';
 
 export async function exportVisaToPDF(elementId, filename = 'ksa-visa.pdf') {
   const element = document.getElementById(elementId);
   if (!element) throw new Error('Print area not found');
 
-  const canvas = await html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    allowTaint: true,
-    backgroundColor: '#ffffff',
-    logging: false,
-  });
+  const saved = prepareVisaElementForCapture(element);
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-  const imgData = canvas.toDataURL('image/png');
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
-  });
+  try {
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width: element.scrollWidth,
+      height: element.scrollHeight,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+    });
 
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = pdf.internal.pageSize.getHeight();
-  const imgWidth = canvas.width;
-  const imgHeight = canvas.height;
-  const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-  const width = imgWidth * ratio;
-  const height = imgHeight * ratio;
-  const x = (pdfWidth - width) / 2;
-  const y = (pdfHeight - height) / 2;
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
 
-  pdf.addImage(imgData, 'PNG', x, y, width, height);
-  pdf.save(filename);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    if (imgHeight <= pdfHeight) {
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
+    } else {
+      const fitWidth = (canvas.width * pdfHeight) / canvas.height;
+      pdf.addImage(imgData, 'PNG', (pdfWidth - fitWidth) / 2, 0, fitWidth, pdfHeight);
+    }
+
+    pdf.save(filename);
+  } finally {
+    restoreVisaElementAfterCapture(saved);
+  }
 }
 
 export function printVisa() {

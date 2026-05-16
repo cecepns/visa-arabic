@@ -3,6 +3,7 @@ import { Search, Printer, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Modal from '../components/Modal';
 import VisaTemplate from '../components/visa/VisaTemplate';
+import VisaPreviewFrame from '../components/visa/VisaPreviewFrame';
 import api from '../services/api';
 import { exportVisaToPDF, printVisa } from '../utils/pdfExport';
 import { useLandingLanguage } from '../context/LandingLanguageContext';
@@ -79,7 +80,9 @@ export default function InquiryModal({ isOpen, onClose, initialVisa = null }) {
               {t('modal.newSearch')}
             </button>
           </span>
-          <VisaTemplate visa={visa} />
+          <VisaPreviewFrame>
+            <VisaTemplate visa={visa} />
+          </VisaPreviewFrame>
         </section>
       )}
     </Modal>

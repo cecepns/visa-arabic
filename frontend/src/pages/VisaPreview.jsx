@@ -4,6 +4,7 @@ import { Printer, Download, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 import VisaTemplate from '../components/visa/VisaTemplate';
+import VisaPreviewFrame from '../components/visa/VisaPreviewFrame';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { exportVisaToPDF, printVisa } from '../utils/pdfExport';
 
@@ -55,7 +56,9 @@ export default function VisaPreview() {
           </button>
         </nav>
       </header>
-      <VisaTemplate visa={visa} />
+      <VisaPreviewFrame>
+        <VisaTemplate visa={visa} />
+      </VisaPreviewFrame>
     </section>
   );
 }

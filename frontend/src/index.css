@@ -109,24 +109,35 @@
   #visa-print-area * {
     visibility: visible;
   }
+  .visa-preview-frame,
+  .visa-preview-scaler {
+    width: 210mm !important;
+    height: auto !important;
+    transform: none !important;
+  }
   #visa-print-area {
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 210mm !important;
+    min-height: 297mm;
+    max-width: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
   }
   .no-print {
     display: none !important;
   }
-  #visa-print-area {
-    box-shadow: none !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-  }
 }
 
-#visa-print-area {
+.visa-preview-frame {
+  overflow: visible;
+}
+
+#visa-print-area,
+.visa-document {
   color: #111;
+  flex-shrink: 0;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }

@@ -9,6 +9,7 @@ import {
   generateBarcodeWidths,
   generateMRZ,
 } from '../../utils/visaDocument';
+import { VISA_PAGE_WIDTH_PX, VISA_PAGE_MIN_HEIGHT_PX } from '../../utils/visaLayout';
 
 function CheckDivider() {
   return (
@@ -80,9 +81,10 @@ export default function VisaTemplate({ visa }) {
   return (
     <div
       id="visa-print-area"
-      className="relative bg-white text-gray-900 w-full max-w-[210mm] mx-auto shadow-2xl overflow-hidden"
+      className="visa-document relative bg-white text-gray-900 mx-auto shadow-2xl"
       style={{
-        minHeight: '297mm',
+        width: VISA_PAGE_WIDTH_PX,
+        minHeight: VISA_PAGE_MIN_HEIGHT_PX,
         fontFamily: "'Cairo', 'Noto Sans Arabic', 'Arial', sans-serif",
       }}
     >
