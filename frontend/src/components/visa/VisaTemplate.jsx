@@ -21,11 +21,11 @@ const VISA_TABLE_GRID = 'grid grid-cols-[1fr_minmax(280px,2.2fr)_1fr] items-cent
 
 function CheckDivider() {
   return (
-    <div className="py-3 select-none w-full" aria-hidden>
+    <div className="py-3 select-none w-full flex justify-center" aria-hidden>
       <img
         src={checkDivider}
         alt=""
-        className="block w-full h-[18px] object-cover object-center"
+        className="block w-[88%] max-w-[640px] h-[28px] object-contain object-center"
       />
     </div>
   );
