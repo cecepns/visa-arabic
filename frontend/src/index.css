@@ -151,3 +151,10 @@
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+
+/* Stretch barcode to full row width like official visa print */
+.visa-barcode-block svg {
+  width: 100% !important;
+  height: 52px !important;
+  max-width: 300px;
+}

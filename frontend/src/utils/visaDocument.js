@@ -48,6 +48,16 @@ export const getDurationLabel = (visa) => {
 
 export const digitsOnly = (str) => (str || '').replace(/\D/g, '');
 
+export const getVisaBarcodeValue = (visa) => {
+  const digits = digitsOnly(visa?.visa_number);
+  return digits || String(visa?.visa_number || '0');
+};
+
+export const getApplicationBarcodeValue = (visa) => {
+  const clean = String(visa?.application_number || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+  return clean || '0';
+};
+
 export const generateBarcodeWidths = (value, count = 60) => {
   const seed = digitsOnly(value) || '1234567890';
   const widths = [];

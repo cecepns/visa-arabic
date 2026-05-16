@@ -1,4 +1,8 @@
 import { QRCodeSVG } from 'qrcode.react';
+import Barcode from 'react-barcode';
+import kingdomLogo from '../../assets/kingdom.png';
+import visaKsaLogo from '../../assets/visa-ksa.png';
+import checkDivider from '../../assets/check.png';
 import { getImageUrl, getVisaQrUrl } from '../../utils/helpers';
 import {
   formatVisaDate,
@@ -6,47 +10,30 @@ import {
   getVisaTypeBilingual,
   getDurationLabel,
   digitsOnly,
-  generateBarcodeWidths,
+  getVisaBarcodeValue,
+  getApplicationBarcodeValue,
   generateMRZ,
 } from '../../utils/visaDocument';
 import { VISA_PAGE_WIDTH_PX, VISA_PAGE_MIN_HEIGHT_PX } from '../../utils/visaLayout';
 
+const VISA_ROW_BORDER = 'border-b border-[#5c4d7a]';
+const VISA_TABLE_GRID = 'grid grid-cols-[1fr_minmax(280px,2.2fr)_1fr] items-center';
+
 function CheckDivider() {
   return (
-    <div className="flex justify-center flex-wrap gap-0.5 py-3 select-none" aria-hidden>
-      {Array.from({ length: 48 }).map((_, i) => (
-        <span key={i} className="text-[#7B5EA7] text-[10px] leading-none font-bold">
-          ✓
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function BarcodeBlock({ value, labelEn, labelAr }) {
-  const code = digitsOnly(value) || value || '0000000000';
-  const bars = generateBarcodeWidths(code);
-
-  return (
-    <div className="flex-1 text-center px-2">
-      <p className="text-[11px] text-gray-700 mb-2 font-arabic" dir="rtl">
-        <span className="font-semibold">{labelAr}</span>
-        <span className="mx-1 text-gray-400">/</span>
-        <span>{labelEn}</span>
-      </p>
-      <div className="flex items-end justify-center gap-[1px] h-14 mx-auto max-w-[240px]">
-        {bars.map((w, i) => (
-          <span key={i} className="bg-black inline-block" style={{ width: `${w}px`, height: i % 5 === 0 ? '85%' : '100%' }} />
-        ))}
-      </div>
-      <p className="font-mono text-sm mt-2 tracking-[0.2em] text-gray-900">{code}</p>
+    <div className="py-3 select-none w-full" aria-hidden>
+      <img
+        src={checkDivider}
+        alt=""
+        className="block w-full h-[18px] object-cover object-center"
+      />
     </div>
   );
 }
 
 function TopFieldRow({ labelEn, labelAr, value }) {
   return (
-    <div className="grid grid-cols-[1fr_minmax(140px,1.2fr)_1fr] items-center border-b border-gray-400 py-2 text-[13px]">
+    <div className={`${VISA_TABLE_GRID} border-b border-gray-400 py-2 text-[13px]`}>
       <span className="font-arabic text-right text-gray-800 pr-2" dir="rtl">
         {labelAr}
       </span>
@@ -56,14 +43,41 @@ function TopFieldRow({ labelEn, labelAr, value }) {
   );
 }
 
-function DetailRow({ labelEn, labelAr, value }) {
+function VisaTableRow({ labelEn, labelAr, center, barcode = false }) {
   return (
-    <div className="grid grid-cols-[1fr_minmax(160px,1.4fr)_1fr] items-center border-b border-gray-300 py-2.5 text-[13px]">
-      <span className="font-arabic text-right text-gray-800 pr-3" dir="rtl">
+    <div className={`${VISA_TABLE_GRID} ${VISA_ROW_BORDER} ${barcode ? 'py-4' : 'py-3'} text-[12px] text-gray-800`}>
+      <span className="font-arabic text-right pr-3 self-center" dir="rtl">
         {labelAr}
       </span>
-      <span className="text-center font-medium text-gray-900 px-3">{value}</span>
-      <span className="text-left text-gray-800 pl-3">{labelEn}</span>
+      {barcode ? (
+        <div className="flex justify-center px-2 self-center">{center}</div>
+      ) : (
+        <span className="text-center px-3 text-[13px] font-bold text-gray-900 self-center">{center}</span>
+      )}
+      <span className="text-left pl-3 self-center">{labelEn}</span>
+    </div>
+  );
+}
+
+function VisaBarcodeCenter({ value, displayText }) {
+  const encoded = String(value || '0');
+  const shown = displayText ?? encoded;
+
+  return (
+    <div className="visa-barcode-block flex flex-col items-center w-[300px] max-w-full">
+      <Barcode
+        value={encoded}
+        format="CODE128"
+        width={2.4}
+        height={52}
+        displayValue={false}
+        margin={0}
+        background="transparent"
+        lineColor="#000000"
+      />
+      <span className="font-mono text-[11px] font-normal text-gray-900 mt-2 tracking-[0.2em]">
+        {shown}
+      </span>
     </div>
   );
 }
@@ -77,11 +91,13 @@ export default function VisaTemplate({ visa }) {
   const DEFAULT_PLACE_OF_ISSUE = 'Saudi Digital Embassy - السفارة السعودية الرقمية';
   const placeOfIssue = visa.place_of_issue || DEFAULT_PLACE_OF_ISSUE;
   const serviceProvider = visa.sponsor_name || 'Ministry of Foreign Affairs - وزارة الخارجية';
-  const borderNo = visa.border_no || String(visa.id || 0);
+  const borderNo = visa.border_no ?? String(visa.id ?? 0);
   const localService =
     visa.local_service ||
     digitsOnly(visa.application_number).slice(-12) ||
     digitsOnly(visa.visa_number);
+  const visaBarcodeValue = getVisaBarcodeValue(visa);
+  const applicationBarcodeValue = getApplicationBarcodeValue(visa);
 
   return (
     <div
@@ -106,27 +122,19 @@ export default function VisaTemplate({ visa }) {
       <div className="relative px-6 py-5">
         {/* Header logos */}
         <header className="flex items-start justify-between mb-5 pb-4 border-b border-gray-300">
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-black tracking-tight text-[#4a148c]">KSA</span>
-                <span className="text-2xl font-black tracking-tight text-[#1a237e]">VISA</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="text-lg font-bold text-[#00897b]">e</span>
-                <span className="text-lg font-bold text-[#1a237e]">VISA</span>
-              </div>
-              <p className="text-[9px] text-gray-500 font-arabic max-w-[140px]" dir="rtl">
-                تأشيرة المملكة العربية السعودية الإلكترونية
-              </p>
-            </div>
+          <div className="flex items-start flex-shrink-0">
+            <img
+              src={visaKsaLogo}
+              alt="KSA Visa eVisa"
+              className="h-[72px] w-auto max-w-[240px] object-contain object-left"
+            />
           </div>
-          <div className="text-center">
-            <div className="text-5xl mb-1">🇸🇦</div>
-            <p className="text-[10px] font-bold tracking-wide text-gray-800">KINGDOM OF SAUDI ARABIA</p>
-            <p className="text-[11px] font-arabic font-bold text-gray-800" dir="rtl">
-              المملكة العربية السعودية
-            </p>
+          <div className="flex justify-end items-start flex-shrink-0">
+            <img
+              src={kingdomLogo}
+              alt="Kingdom of Saudi Arabia"
+              className="h-[72px] w-auto max-w-[200px] object-contain object-right"
+            />
           </div>
         </header>
 
@@ -152,31 +160,32 @@ export default function VisaTemplate({ visa }) {
 
         <CheckDivider />
 
-        {/* Place of issue */}
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center py-3 text-[13px] mb-1">
-          <span className="font-arabic text-right text-gray-800" dir="rtl">
-            مكان الإصدار
-          </span>
-          <span className="text-center font-semibold px-4 text-gray-900">
-            {placeOfIssue}
-          </span>
-          <span className="text-left text-gray-800">Place of issue</span>
-        </div>
-
-        {/* Detail rows */}
-        <section className="border-t border-gray-400 mt-2">
-          <DetailRow labelEn="Name" labelAr="الاسم" value={visa.full_name?.toUpperCase()} />
-          <DetailRow labelEn="Nationality" labelAr="الجنسية" value={getNationalityBilingual(visa.nationality)} />
-          <DetailRow labelEn="Type Of Visa" labelAr="نوع التأشيرة" value={getVisaTypeBilingual(visa.visa_type)} />
-          <DetailRow labelEn="Service Provider" labelAr="شركة تقديم الخدمات" value={serviceProvider} />
-          <DetailRow labelEn="Border No" labelAr="رقم الحدود" value={borderNo} />
-          <DetailRow labelEn="Local Service" labelAr="الخدمة الميدانية" value={localService} />
-        </section>
-
-        {/* Barcodes */}
-        <section className="flex gap-4 mt-8 mb-6 px-2">
-          <BarcodeBlock value={visa.visa_number} labelEn="Visa No." labelAr="رقم التأشيرة" />
-          <BarcodeBlock value={visa.application_number} labelEn="Application No." labelAr="رقم الطلب" />
+        {/* Place of issue → Application No. (unified table) */}
+        <section className="border-t border-[#5c4d7a]">
+          <VisaTableRow labelEn="Place of issue" labelAr="مصدر التأشيرة" center={placeOfIssue} />
+          <VisaTableRow labelEn="Name" labelAr="الاسم" center={visa.full_name?.toUpperCase()} />
+          <VisaTableRow labelEn="Nationality" labelAr="الجنسية" center={getNationalityBilingual(visa.nationality)} />
+          <VisaTableRow labelEn="Type Of Visa" labelAr="نوع التأشيرة" center={getVisaTypeBilingual(visa.visa_type)} />
+          <VisaTableRow labelEn="Service Provider" labelAr="شركة تقديم الخدمات" center={serviceProvider} />
+          <VisaTableRow labelEn="Border No" labelAr="رقم الحدود" center={borderNo} />
+          <VisaTableRow labelEn="Local Service" labelAr="الخدمة الميدانية" center={localService} />
+          <VisaTableRow
+            labelEn="Visa No."
+            labelAr="رقم التأشيرة"
+            barcode
+            center={<VisaBarcodeCenter value={visaBarcodeValue} displayText={visaBarcodeValue} />}
+          />
+          <VisaTableRow
+            labelEn="Application No."
+            labelAr="رقم الطلب"
+            barcode
+            center={
+              <VisaBarcodeCenter
+                value={applicationBarcodeValue}
+                displayText={applicationBarcodeValue}
+              />
+            }
+          />
         </section>
 
         <CheckDivider />
@@ -199,7 +208,7 @@ export default function VisaTemplate({ visa }) {
         </footer>
 
         {/* MRZ */}
-        <div className="bg-gray-100 border border-gray-300 px-3 py-3 mt-2 font-mono text-[11px] leading-relaxed tracking-wider text-gray-900 break-all">
+        <div className="mt-2 px-3 py-3 font-mono text-[11px] leading-relaxed tracking-wider text-gray-900 text-center">
           {mrzLines.map((line) => (
             <p key={line} className="whitespace-pre overflow-hidden">
               {line}
