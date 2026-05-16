@@ -18,15 +18,31 @@ import { VISA_PAGE_WIDTH_PX, VISA_PAGE_MIN_HEIGHT_PX } from '../../utils/visaLay
 
 const VISA_ROW_BORDER = 'border-b border-[#5c4d7a]';
 const VISA_TABLE_GRID = 'grid grid-cols-[1fr_minmax(280px,2.2fr)_1fr] items-center';
+const PHOTO_WIDTH = 'w-[130px]';
 
-function CheckDivider() {
+function CheckDivider({ besidePhoto = false }) {
+  const img = (
+    <img
+      src={checkDivider}
+      alt=""
+      className={`block h-[28px] object-contain object-center ${
+        besidePhoto ? 'w-full' : 'w-[88%] max-w-[640px]'
+      }`}
+    />
+  );
+
+  if (besidePhoto) {
+    return (
+      <div className="flex gap-5 select-none" aria-hidden>
+        <div className={`flex-shrink-0 ${PHOTO_WIDTH}`} />
+        <div className="flex-1 min-w-0 py-3">{img}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="py-3 select-none w-full flex justify-center" aria-hidden>
-      <img
-        src={checkDivider}
-        alt=""
-        className="block w-[88%] max-w-[640px] h-[28px] object-contain object-center"
-      />
+      {img}
     </div>
   );
 }
@@ -140,7 +156,7 @@ export default function VisaTemplate({ visa }) {
 
         {/* Photo + top fields */}
         <section className="flex gap-5 mb-2">
-          <div className="flex-shrink-0 w-[130px] h-[165px] border-2 border-gray-500 bg-gray-50 overflow-hidden">
+          <div className={`flex-shrink-0 ${PHOTO_WIDTH} h-[165px] border-2 border-gray-500 bg-gray-50 overflow-hidden`}>
             {photoUrl ? (
               <img src={photoUrl} alt="" className="w-full h-full object-cover" crossOrigin="anonymous" />
             ) : (
@@ -158,7 +174,7 @@ export default function VisaTemplate({ visa }) {
           </div>
         </section>
 
-        <CheckDivider />
+        <CheckDivider besidePhoto />
 
         {/* Place of issue → Application No. (unified table) */}
         <section className="border-t border-[#5c4d7a]">
