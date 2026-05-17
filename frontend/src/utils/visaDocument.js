@@ -29,15 +29,46 @@ const VISA_TYPE_AR = {
   Transit: 'عبور',
 };
 
+const splitBilingualParts = (value) =>
+  String(value || '')
+    .split(/\s*-\s*/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+const pickLatinPart = (parts) => parts.find((p) => /^[A-Za-z][A-Za-z\s]*$/.test(p));
+const pickArabicPart = (parts) => parts.find((p) => /[\u0600-\u06FF]/.test(p));
+
+/** Arabic - English, idempotent if value is already bilingual */
 export const getNationalityBilingual = (nationality) => {
-  const ar = NATIONALITY_AR[nationality] || nationality;
-  return `${nationality} - ${ar}`;
+  if (!nationality) return '—';
+  const raw = String(nationality).trim();
+  const parts = splitBilingualParts(raw);
+  const enFromParts = pickLatinPart(parts);
+  const arFromParts = pickArabicPart(parts);
+
+  if (enFromParts && arFromParts) {
+    return `${arFromParts} - ${enFromParts}`;
+  }
+
+  const en = NATIONALITY_AR[raw] ? raw : enFromParts || raw;
+  const ar = NATIONALITY_AR[en] || arFromParts || raw;
+  return `${ar} - ${en}`;
 };
 
 export const getVisaTypeBilingual = (type) => {
-  const ar = VISA_TYPE_AR[type] || type;
-  if (type === 'Umrah' || type === 'Hajj') return `${type} - ${ar}`;
-  return `${type} - ${ar}`;
+  if (!type) return '—';
+  const raw = String(type).trim();
+  const parts = splitBilingualParts(raw);
+  const enFromParts = pickLatinPart(parts);
+  const arFromParts = pickArabicPart(parts);
+
+  if (enFromParts && arFromParts) {
+    return `${enFromParts} - ${arFromParts}`;
+  }
+
+  const en = VISA_TYPE_AR[raw] ? raw : enFromParts || raw;
+  const ar = VISA_TYPE_AR[en] || arFromParts || raw;
+  return `${en} - ${ar}`;
 };
 
 export const HAJJ_SEASON_AR = 'موسم الحج';
