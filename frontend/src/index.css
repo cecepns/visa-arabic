@@ -178,6 +178,12 @@ html.dark .visa-document {
   color: #111827 !important;
 }
 
+.visa-document .visa-label-ar {
+  font-family: 'Noto Sans Arabic', Arial, Tahoma, sans-serif;
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+}
+
 .visa-watermark-emblem {
   width: min(88%, 440px);
   height: auto;

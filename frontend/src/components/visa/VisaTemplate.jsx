@@ -21,7 +21,9 @@ import { VISA_PAGE_WIDTH_PX, VISA_PAGE_MIN_HEIGHT_PX } from '../../utils/visaLay
 const VISA_ROW_BORDER = 'border-b border-gray-400';
 const VISA_TABLE_GRID = 'grid grid-cols-[1fr_minmax(280px,2.2fr)_1fr] items-center';
 const PHOTO_WIDTH = 'w-[130px]';
-const VISA_LABEL = 'text-[12px] font-semibold text-gray-800 leading-snug';
+const VISA_LABEL_EN = 'text-[12px] font-semibold text-gray-800 leading-snug';
+const VISA_LABEL_AR =
+  'visa-label-ar text-[13px] font-bold text-gray-900 leading-snug font-arabic';
 const VISA_VALUE = 'text-[14px] font-bold text-gray-950 leading-tight';
 const VISA_FONT_EN = "'Arial', 'Helvetica Neue', Helvetica, sans-serif";
 
@@ -55,11 +57,11 @@ function CheckDivider({ besidePhoto = false }) {
 function TopFieldRow({ labelEn, labelAr, value }) {
   return (
     <div className={`${VISA_TABLE_GRID} border-b border-gray-400 py-[7px]`}>
-      <span className={`${VISA_LABEL} font-arabic text-right pr-2`} dir="rtl">
+      <span className={`${VISA_LABEL_AR} text-right pr-2`} dir="rtl">
         {labelAr}
       </span>
       <span className={`${VISA_VALUE} text-center px-2`}>{value}</span>
-      <span className={`${VISA_LABEL} text-left pl-2`}>{labelEn}</span>
+      <span className={`${VISA_LABEL_EN} text-left pl-2`}>{labelEn}</span>
     </div>
   );
 }
@@ -67,7 +69,7 @@ function TopFieldRow({ labelEn, labelAr, value }) {
 function VisaTableRow({ labelEn, labelAr, center, barcode = false }) {
   return (
     <div className={`${VISA_TABLE_GRID} ${VISA_ROW_BORDER} ${barcode ? 'py-2' : 'py-[9px]'}`}>
-      <span className={`${VISA_LABEL} font-arabic text-right pr-3 self-center`} dir="rtl">
+      <span className={`${VISA_LABEL_AR} text-right pr-3 self-center`} dir="rtl">
         {labelAr}
       </span>
       {barcode ? (
@@ -75,7 +77,7 @@ function VisaTableRow({ labelEn, labelAr, center, barcode = false }) {
       ) : (
         <span className={`${VISA_VALUE} text-center px-3 self-center`}>{center}</span>
       )}
-      <span className={`${VISA_LABEL} text-left pl-3 self-center`}>{labelEn}</span>
+      <span className={`${VISA_LABEL_EN} text-left pl-3 self-center`}>{labelEn}</span>
     </div>
   );
 }
@@ -221,7 +223,7 @@ export default function VisaTemplate({ visa }) {
 
         {/* QR footer */}
         <footer className="flex items-center justify-center gap-8 py-6">
-          <p className={`${VISA_LABEL} max-w-[120px] text-right`}>
+          <p className={`${VISA_LABEL_EN} max-w-[120px] text-right`}>
             For Visa Inquiry
             <br />
             Please scan QR code
@@ -229,7 +231,7 @@ export default function VisaTemplate({ visa }) {
           <div className="flex-shrink-0 p-2 border border-gray-300 bg-white">
             <QRCodeSVG value={qrUrl} size={100} level="H" />
           </div>
-          <p className={`${VISA_LABEL} font-arabic max-w-[120px] text-left`} dir="rtl">
+          <p className={`${VISA_LABEL_AR} max-w-[120px] text-left`} dir="rtl">
             للإستعلام عن التأشيرة
             <br />
             يرجى مسح رمز الاستجابة السريعة

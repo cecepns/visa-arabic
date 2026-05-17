@@ -14,7 +14,7 @@ export default {
         },
       },
       fontFamily: {
-        arabic: ['Cairo', 'Noto Sans Arabic', 'sans-serif'],
+        arabic: ['"Noto Sans Arabic"', 'Arial', 'Tahoma', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       animation: {
