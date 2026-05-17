@@ -40,9 +40,15 @@ export const getVisaTypeBilingual = (type) => {
   return `${type} - ${ar}`;
 };
 
+export const HAJJ_SEASON_AR = 'موسم الحج';
+export const HAJJ_SEASON_EN = 'Hajj Season';
+
+/** Bilingual center value: Arabic - English */
+export const getHajjSeasonLabel = () => `${HAJJ_SEASON_AR} - ${HAJJ_SEASON_EN}`;
+
 export const getDurationLabel = (visa) => {
-  if (visa.visa_type === 'Hajj') return 'Hajj Season - موسم الحج';
-  if (visa.visa_type === 'Umrah') return 'Umrah Season - موسم العمرة';
+  if (visa.visa_type === 'Hajj') return getHajjSeasonLabel();
+  if (visa.visa_type === 'Umrah') return 'موسم العمرة - Umrah Season';
   return `${formatVisaDate(visa.issue_date)} - ${formatVisaDate(visa.expiry_date)}`;
 };
 

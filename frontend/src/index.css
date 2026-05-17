@@ -130,9 +130,27 @@
   }
 }
 
+/* Visa preview routes always render as light / white paper */
+.visa-preview-page,
+.visa-preview-page .visa-preview-viewport {
+  background-color: #ffffff !important;
+  color: #111827;
+  color-scheme: light;
+}
+
+html.dark .visa-preview-page,
+html.dark .visa-preview-page .visa-preview-viewport {
+  background-color: #ffffff !important;
+  color: #111827;
+}
+
+html.dark body:has(.visa-preview-page) {
+  background-color: #ffffff !important;
+  color: #111827;
+}
+
 .visa-preview-viewport {
   -webkit-overflow-scrolling: touch;
-  background-color: inherit;
 }
 
 .visa-preview-frame {
@@ -146,15 +164,33 @@
 
 #visa-print-area,
 .visa-document {
-  color: #111;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  color-scheme: light;
   flex-shrink: 0;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
 
-/* Stretch barcode to full row width like official visa print */
+html.dark #visa-print-area,
+html.dark .visa-document {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+.visa-watermark-emblem {
+  width: min(88%, 440px);
+  height: auto;
+  object-fit: contain;
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+  filter: contrast(1.2) saturate(1.1);
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+}
+
 .visa-barcode-block svg {
-  width: 100% !important;
-  height: 52px !important;
-  max-width: 300px;
+  width: auto !important;
+  height: 28px !important;
+  max-width: 220px;
 }
